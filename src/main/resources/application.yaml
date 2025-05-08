@@ -1,0 +1,17 @@
+server:
+  port: 8088
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: trazabilidad_db
+
+jwt:
+  secret-key: UltraClaveSuperSecretaIndescifrable32
+
+messaging:
+  url: http://localhost:8087
+
+plazoleta:
+  url: http://localhost:8085
