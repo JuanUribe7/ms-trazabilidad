@@ -1,8 +1,7 @@
 package com.example.plazoleta.ms_trazabilidad.domain.usecases;
 
-import com.example.plazoleta.ms_trazabilidad.application.dto.response.EmployeeEfficiencyResponse;
-import com.example.plazoleta.ms_trazabilidad.application.mappers.EmployeeEfficiencyMapper;
-import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTraceability;
+import com.example.plazoleta.ms_trazabilidad.domain.helpers.EmployeeEfficiencyHelper;
+import com.example.plazoleta.ms_trazabilidad.domain.model.EmployeeEfficiency;
 import com.example.plazoleta.ms_trazabilidad.domain.ports.in.GetEmployeeEfficiencyServicePort;
 import com.example.plazoleta.ms_trazabilidad.domain.ports.out.OrderTracePersistencePort;
 
@@ -18,13 +17,10 @@ public class GetEmployeeEfficiencyUseCase implements GetEmployeeEfficiencyServic
     }
 
     @Override
-    public List<EmployeeEfficiencyResponse> execute(List<Long> employeeIds) {
+    public List<EmployeeEfficiency> execute(List<Long> employeeIds) {
         return employeeIds.stream()
-                .map(id -> {
-                    List<OrderTraceability> orders = port.findAllDeliveredByEmployeeId(id);
-                    return EmployeeEfficiencyMapper.map(id, orders);
-                })
-                .sorted(Comparator.comparingLong(EmployeeEfficiencyResponse::averageEfficiencyInMilliseconds))
+                .map(id -> EmployeeEfficiencyHelper.buildEfficiency(id, port.findAllDeliveredByEmployeeId(id)))
+                .sorted(Comparator.comparingLong(EmployeeEfficiency::getAverageEfficiencyInMilliseconds))
                 .toList();
     }
 }

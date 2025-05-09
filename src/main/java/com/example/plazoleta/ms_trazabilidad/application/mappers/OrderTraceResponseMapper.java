@@ -13,7 +13,7 @@ public class OrderTraceResponseMapper {
 
     public static OrderTraceResponse toResponse(OrderTraceability model) {
         return new OrderTraceResponse(
-                model.getAssignedEmployeeId(),
+                Long.parseLong(model.getAssignedEmployeeId()),
                 model.getOrderTrack().stream()
                         .map(OrderTrackDtoMapper::toResponse)
                         .collect(Collectors.toList()),

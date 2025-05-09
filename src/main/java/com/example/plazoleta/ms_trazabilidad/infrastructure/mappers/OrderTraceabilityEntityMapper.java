@@ -48,11 +48,4 @@ public class OrderTraceabilityEntityMapper {
         );
     }
 
-    private Long parseLong(String value) {
-        try {
-            return value != null ? Long.parseLong(value) : null;
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
 }

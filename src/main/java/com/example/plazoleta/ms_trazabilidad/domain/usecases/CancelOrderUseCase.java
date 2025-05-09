@@ -1,5 +1,7 @@
 package com.example.plazoleta.ms_trazabilidad.domain.usecases;
 
+import com.example.plazoleta.ms_trazabilidad.commons.constants.ExceptionMessages;
+import com.example.plazoleta.ms_trazabilidad.commons.exceptions.InvalidFieldException;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTraceability;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTrackingModel;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderStates;
@@ -25,7 +27,7 @@ public class CancelOrderUseCase implements CancelOrderServicePort {
         OrderStates lastState = track.get(track.size() - 1).getState();
 
         if (lastState != OrderStates.PENDING) {
-            throw new IllegalStateException("Only PENDING orders can be cancelled");
+            throw new InvalidFieldException(ExceptionMessages.ORDER_CAN_NOT_BE_CANCELLED);
         }
 
         order.getOrderTrack().add(new OrderTrackingModel(OrderStates.CANCELLED, Instant.now()));

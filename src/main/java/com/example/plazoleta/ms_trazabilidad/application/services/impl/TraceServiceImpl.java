@@ -3,6 +3,7 @@ package com.example.plazoleta.ms_trazabilidad.application.services.impl;
 import com.example.plazoleta.ms_trazabilidad.application.dto.request.*;
 import com.example.plazoleta.ms_trazabilidad.application.dto.response.EmployeeEfficiencyResponse;
 import com.example.plazoleta.ms_trazabilidad.application.dto.response.OrderTraceResponse;
+import com.example.plazoleta.ms_trazabilidad.application.mappers.EmployeeEfficiencyMapper;
 import com.example.plazoleta.ms_trazabilidad.application.mappers.OrderTraceResponseMapper;
 import com.example.plazoleta.ms_trazabilidad.application.mappers.OrderTraceabilityDtoMapper;
 import com.example.plazoleta.ms_trazabilidad.application.services.TraceService;
@@ -69,7 +70,10 @@ public class TraceServiceImpl implements TraceService {
         List<Long> filtered = request.employeeIds().stream()
                 .filter(validEmployeeIds::contains)
                 .toList();
-        return getEmployeeEfficiencyService.execute(filtered);
+
+        return getEmployeeEfficiencyService.execute(filtered).stream()
+                .map(EmployeeEfficiencyMapper::toResponse)
+                .toList();
     }
 
 

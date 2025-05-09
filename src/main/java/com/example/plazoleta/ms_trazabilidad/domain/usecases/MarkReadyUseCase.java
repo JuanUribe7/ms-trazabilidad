@@ -1,6 +1,9 @@
 package com.example.plazoleta.ms_trazabilidad.domain.usecases;
 
 import com.example.plazoleta.ms_trazabilidad.application.dto.request.SmsRequestDto;
+import com.example.plazoleta.ms_trazabilidad.commons.constants.ExceptionMessages;
+import com.example.plazoleta.ms_trazabilidad.commons.exceptions.InvalidFieldException;
+import com.example.plazoleta.ms_trazabilidad.commons.exceptions.NotFoundException;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderStates;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTraceability;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTrackingModel;
@@ -24,9 +27,9 @@ public class MarkReadyUseCase implements MarkReadyServicePort {
     @Override
     public void execute(Long orderId, String phoneNumber) {
 
-        System.out.println(orderId + " " + phoneNumber);
+
         if (!persistencePort.existsByOrderId(orderId.toString())) {
-            throw new IllegalArgumentException("Order not found");
+            throw new NotFoundException(ExceptionMessages.ORDER_NOT_FOUND);
         }
 
         OrderTraceability order = persistencePort.getByOrderId(orderId);
@@ -36,13 +39,13 @@ public class MarkReadyUseCase implements MarkReadyServicePort {
                 .getState();
 
         if (lastState != OrderStates.PREPARING) {
-            throw new IllegalStateException("Order is not in PREPARING state");
+            throw new InvalidFieldException(ExceptionMessages.ORDER_MUST_BE_PREPARING);
         }
         String generatedPin = generatePin();
 
 
         order.setSecurityPin(generatedPin);
-        messagingPort.sendSms(new SmsRequestDto(phoneNumber, "Your order is ready! PIN: " + generatedPin));
+        messagingPort.sendSms(new SmsRequestDto(phoneNumber, ExceptionMessages.ORDER_READY + generatedPin));
         order.getOrderTrack().add(new OrderTrackingModel(OrderStates.READY, Instant.now()));
         persistencePort.save(order);
         }

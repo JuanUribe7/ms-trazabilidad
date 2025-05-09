@@ -1,8 +1,10 @@
 package com.example.plazoleta.ms_trazabilidad.domain.usecases;
 
+import com.example.plazoleta.ms_trazabilidad.commons.constants.ExceptionMessages;
+import com.example.plazoleta.ms_trazabilidad.commons.exceptions.InvalidFieldException;
+import com.example.plazoleta.ms_trazabilidad.domain.model.OrderStates;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTraceability;
 import com.example.plazoleta.ms_trazabilidad.domain.model.OrderTrackingModel;
-import com.example.plazoleta.ms_trazabilidad.domain.model.OrderStates;
 import com.example.plazoleta.ms_trazabilidad.domain.ports.in.UpdateTrackWithEmployeeServicePort;
 import com.example.plazoleta.ms_trazabilidad.domain.ports.out.OrderTracePersistencePort;
 
@@ -27,7 +29,7 @@ public class UpdateWithEmployeeUseCase implements UpdateTrackWithEmployeeService
                 .getState();
 
         if (lastState != OrderStates.PENDING) {
-            throw new IllegalStateException("Only orders in PENDING state can be assigned to an employee");
+            throw new InvalidFieldException(ExceptionMessages.ORDER_CANNOT_BE_ASSIGNES);
         }
         traceability.setAssignedEmployeeId(String.valueOf(employeeId));
         traceability.getOrderTrack().add(new OrderTrackingModel(OrderStates.PREPARING, Instant.now()));

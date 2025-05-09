@@ -1,9 +1,9 @@
 package com.example.plazoleta.ms_trazabilidad.domain.ports.in;
 
-import com.example.plazoleta.ms_trazabilidad.application.dto.response.EmployeeEfficiencyResponse;
+import com.example.plazoleta.ms_trazabilidad.domain.model.EmployeeEfficiency;
 
 import java.util.List;
 
 public interface GetEmployeeEfficiencyServicePort {
-    List<EmployeeEfficiencyResponse> execute(List<Long> employeeIds);
+    List<EmployeeEfficiency> execute(List<Long> employeeIds);
 }
